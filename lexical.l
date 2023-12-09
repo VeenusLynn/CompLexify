@@ -1,231 +1,276 @@
 %{
-int nb_ligne = 1;
-int Col = 1;
+#include "syntax.tab.h"
+
+extern nb_line;
+extern Col;
 %}
 
-lettre [a-zA-Z]
-chiffre [0-9]
-IDF {lettre}({lettre}|{chiffre})*(\_?({lettre}|{chiffre})+)*
-cst_int -?{chiffre}+
+letter [a-zA-Z]
+number [0-9]
+IDF {letter}({letter}|{number}|\_)*
+cst_int -?{number}+
 cst_real -?{cst_int}\.{cst_int}
-cst_char \"({lettre}|{chiffre})+\"
+cst_char \"({letter}|{number})+\"
+cst_logical "TRUE"|"FALSE"
 
 comment %.*
 
 %%
 
 "PROGRAM" { 
-    printf("keyword recognized %s \n", yytext);   
-    Col= Col + strlen(yytext);
+    printf("Keyword recognized : %s\n", yytext);
+    Col += yyleng;
+    return program_kw;
 }
 "REAL" { 
-    printf("keyword recognized %s \n", yytext); 
-    Col= Col + strlen(yytext); 
+    printf("Keyword recognized : %s\n", yytext);
+    Col += yyleng; 
+    return real_kw;
 }
 "INTEGER" { 
-    printf("keyword recognized %s \n", yytext);  
-    Col= Col + strlen(yytext);
+    printf("Keyword recognized : %s\n", yytext);
+    Col += yyleng;
+    return integer_kw;
 }
 "LOGICAL" { 
-    printf("keyword recognized %s \n", yytext);  
-    Col= Col + strlen(yytext);
+    printf("Keyword recognized : %s\n", yytext);
+    Col += yyleng;
+    return logical_kw;
 }
 "CHARACTER" { 
-    printf("keyword recognized %s \n", yytext); 
-    Col= Col + strlen(yytext); 
+    printf("Keyword recognized : %s\n", yytext);
+    Col += yyleng;
+    return character_kw;
 }
 "END" { 
-    printf("keyword recognized %s \n", yytext);  
-    Col= Col + strlen(yytext);
+    printf("Keyword recognized : %s\n", yytext);
+    Col += yyleng;
+    return end_kw;
 }
 "IF" { 
-    printf("keyword recognized %s \n", yytext);  
-    Col= Col + strlen(yytext);
+    printf("Keyword recognized : %s\n", yytext); 
+    Col += yyleng;
+    return if_kw;
 }
 "THEN" { 
-    printf("keyword recognized %s \n", yytext);   
-    Col= Col + strlen(yytext); 
+    printf("Keyword recognized : %s\n", yytext);  
+    Col += yyleng; 
+    return then_kw;
 }
 "ELSE" { 
-    printf("keyword recognized %s \n", yytext); 
-    Col= Col + strlen(yytext); 
+    printf("Keyword recognized : %s\n", yytext);
+    Col += yyleng;
+    return else_kw; 
 }
 "ENDIF" { 
-    printf("keyword recognized %s \n", yytext);  
-    Col= Col + strlen(yytext);
+    printf("Keyword recognized : %s\n", yytext);  
+    Col += yyleng;
+    return endif_kw;
 }
 "WRITE" { 
-    printf("keyword recognized %s \n", yytext);  
-    Col= Col + strlen(yytext);
+    printf("Keyword recognized : %s\n", yytext); 
+    Col += yyleng;
+    return write_kw;
 }
 "READ" { 
-    printf("keyword recognized %s \n", yytext);  
-    Col= Col + strlen(yytext); 
+    printf("Keyword recognized : %s\n", yytext);
+    Col += yyleng; 
+    return read_kw;
 }
 "DOWHILE" { 
-    printf("keyword recognized %s \n", yytext);  
-    Col= Col + strlen(yytext); 
+    printf("Keyword recognized : %s\n", yytext);
+    Col += yyleng; 
+    return dowhile_kw;
 }
 "ENDDO" { 
-    printf("keyword recognized %s \n", yytext);  
-    Col= Col + strlen(yytext);
+    printf("Keyword recognized : %s\n", yytext);
+    Col += yyleng;
+    return enddo_kw;
 }
 "ROUTINE" { 
-    printf("keyword recognized %s \n", yytext);  
-    Col= Col + strlen(yytext); 
+    printf("Keyword recognized : %s\n", yytext);
+    Col += yyleng;
+    return routine_kw; 
 }
 "ENDR" { 
-    printf("keyword recognized %s \n", yytext);  
-    Col= Col + strlen(yytext);
+    printf("Keyword recognized : %s\n", yytext);
+    Col += yyleng;
+    return endr_kw;
 }
 "CALL" { 
-    printf("keyword recognized %s \n", yytext);  
-    Col= Col + strlen(yytext); 
+    printf("Keyword recognized : %s\n", yytext);
+    Col += yyleng; 
+    return call_kw;
 }
 "EQUIVALENCE" { 
-    printf("keyword recognized %s \n", yytext);    
-    Col= Col + strlen(yytext); 
+    printf("Keyword recognized : %s\n", yytext); 
+    Col += yyleng; 
+    return equivalence_kw;
 }
 "DIMENSION" { 
-    printf("keyword recognized %s \n", yytext);    
-    Col= Col + strlen(yytext);
+    printf("Keyword recognized : %s\n", yytext); 
+    Col += yyleng;
+    return dimension_kw;
 }
-"TRUE" { 
-    printf("keyword recognized %s \n", yytext);  
-    Col= Col + strlen(yytext);
-}
-"FALSE" { 
-    printf("keyword recognized %s \n", yytext);  
-    Col= Col + strlen(yytext);
-}
+
 
 
 "GT" { 
-    printf("sep recognized %s (>=)\n", yytext);  
-    Col= Col + strlen(yytext);
+    printf("separator recognized : %s\n", yytext);
+    Col += yyleng;
+    return gt;
 }
 "GE" { 
-    printf("sep recognized %s (>)\n", yytext);  
-    Col= Col + strlen(yytext);
+    printf("separator recognized : %s\n", yytext);
+    Col += yyleng;
+    return ge;
 }
 "EQ" { 
-    printf("sep recognized %s (==) \n", yytext);  
-    Col= Col + strlen(yytext);
+    printf("separator recognized : %s\n", yytext);
+    Col += yyleng;
+    return eq;
 }
 "NE" { 
-    printf("sep recognized %s(!=) \n", yytext);  
-    Col= Col + strlen(yytext);
+    printf("separator recognized : %s\n", yytext);
+    Col += yyleng;
+    return ne;
 }
 "LE" { 
-    printf("sep recognized %s (<=)\n", yytext);  
-    Col= Col + strlen(yytext);
+    printf("separator recognized : %s\n", yytext);
+    Col += yyleng;
+    return le;
 }
 "LT" { 
-    printf("sep recognized %s (<)\n", yytext);  
-    Col= Col + strlen(yytext);
+    printf("separator recognized : %s\n", yytext);
+    Col += yyleng;
+    return lt;
 }
 
-
+{cst_logical} {   
+    printf("Logical constant recognized : %s\n", yytext);
+    Col += yyleng;
+    return cst_logical;
+}
 {IDF} {
     if (strlen(yytext) > 10){
-        fprintf(stderr,"Warning : IDF longer than 10 chars\n");
+        fprintf(stderr,"Warning line %d : IDF longer than 10 chars\n",nb_line);
     } else {
-        printf("IDF recognized : %s\n",yytext);   
-        Col= Col + strlen(yytext);
+        printf("IDF recognized : %s\n", yytext);
+        Col += yyleng;
+        return idf;
     }
 }
 {cst_int} {
     if (atoi(yytext) >= -32768 && atoi(yytext) <= 32767) {
-        printf("cst integer recognized : %s\n",yytext);   
-        Col= Col + strlen(yytext);
+        printf("Integer constant recognized : %s\n", yytext);
+        Col += yyleng;
+        return cst_int;
     } else {
-        fprintf(stderr,"Warning : out of range \n");
+        fprintf(stderr,"Warning line %d : Integer out of range \n",nb_line);
     }
 }
 {cst_real} {
     if (atof(yytext) >= -32768.32767 && atof(yytext) <= 32767.32767) {
-        printf("cst real recognized : %s\n",yytext);   
-        Col= Col + strlen(yytext);
+        printf("Real constant recognized : %s\n", yytext);
+        Col += yyleng;
+        return cst_real;
     } else {
-        fprintf(stderr,"Warning : out of range \n");
+        fprintf(stderr,"Warning line %d : Real out of range \n",nb_line);
     }
 }
 {cst_char} {
     if (strlen(yytext) <= 20) {
-        printf("cst char recognized : %s\n",yytext);   
-        Col= Col + strlen(yytext);
+        printf("Character constant recognized : %s\n", yytext);
+        Col += yyleng;
+        return cst_char;
     } else {
-        fprintf(stderr,"Warning : string out of range \n");
+        fprintf(stderr,"Warning line %d : String out of range \n",nb_line);
     }
 }
 
 
 
 "," { 
-    printf("sep recognized %s \n", yytext);  
-    Col= Col + strlen(yytext);
+    printf("separator recognized : %s\n", yytext);
+    Col += yyleng;
+    return comma;
 }  
 ";" { 
-    printf("sep recognized %s \n", yytext);  
-    Col= Col + strlen(yytext);
+    printf("separator recognized : %s\n", yytext);
+    Col += yyleng;
+    return semi_colon;
 }
 "=" { 
-    printf("sep recognized %s \n", yytext);  
-    Col= Col + strlen(yytext);
+    printf("separator recognized : %s\n", yytext);
+    Col += yyleng;
+    return assign;
 }
 "+" { 
-    printf("sep recognized %s \n", yytext);  
-    Col= Col + strlen(yytext);
+    printf("separator recognized : %s\n", yytext);
+    Col += yyleng;
+    return plus;
 }
 "-" { 
-    printf("sep recognized %s \n", yytext);  
-    Col= Col + strlen(yytext);
+    printf("separator recognized : %s\n", yytext);
+    Col += yyleng;
+    return minus;
 }
 "*" { 
-    printf("sep recognized %s \n", yytext); 
-    Col= Col + strlen(yytext);
+    printf("separator recognized : %s\n", yytext);
+    Col += yyleng;
+    return mult;
 }
 "/" { 
-    printf("sep recognized %s \n", yytext);  
-    Col= Col + strlen(yytext);
+    printf("separator recognized : %s\n", yytext);
+    Col += yyleng;
+    return divi;
 }
 "(" { 
-    printf("sep recognized %s \n", yytext); 
-    Col= Col + strlen(yytext);
+    printf("separator recognized : %s\n", yytext);
+    Col += yyleng;
+    return lpar;
 }
 ")" { 
-    printf("sep recognized %s \n", yytext);  
-    Col= Col + strlen(yytext);
+    printf("separator recognized : %s\n", yytext);
+    Col += yyleng;
+    return rpar;
 }
 "." { 
-    printf("sep recognized %s \n", yytext);  
-    Col= Col + strlen(yytext);
+    printf("separator recognized : %s\n", yytext);
+    Col += yyleng;
+    return dot;
 }
 "\"" { 
-    printf("sep recognized %s \n", yytext);  
-    Col= Col + strlen(yytext);
+    printf("separator recognized : %s\n", yytext);
+    Col += yyleng;
+    return quote;
 }
 ":" { 
-    printf("sep recognized %s \n", yytext);  
-    Col= Col + strlen(yytext);
+    printf("separator recognized : %s\n", yytext);
+    Col += yyleng;
+    return colon;
 }
 
 
-{comment} { printf("comment \n");}
+{comment} { 
+    printf("Comment recognized \n");
+    nb_line++;
+}
 
-[\t]   
-[ ] { Col++;}  
+[\t ] { 
+    Col += yyleng;
+} 
 \n { 
-    nb_ligne++;
+    nb_line++;
     Col= 1; 
 }
 
-. { printf ("\n Erreur lexical: Ligne: %d; Colone: %d; Entity  %s  not recognized \n",nb_ligne, Col, yytext);}
+. { 
+    printf ("\nLexical Error at Line: %d ; Column: %d ; Entity  %s  not recognized \n",nb_line, Col, yytext);
+    Col += yyleng;  
+    // Terminate the lexer
+    printf("Lexical error encountered. Stopping further processing.\n");
+    yyterminate();  
+}
 
 %%
-
-
-int main (){
-    yylex ();
-    return 0;
-}

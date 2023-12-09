@@ -1,2 +1,3 @@
 flex lexical.l
-gcc lex.yy.c -lfl -o LEXER.exe
+bison -d syntax.y
+gcc lex.yy.c syntax.tab.c -lfl -ly -o PARSER.exe

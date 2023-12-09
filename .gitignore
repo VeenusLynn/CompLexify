@@ -51,3 +51,6 @@ Module.symvers
 Mkfile.old
 dkms.conf
 Exemple
+lex.yy.c
+syntax.tab.c
+syntax.tab.h
