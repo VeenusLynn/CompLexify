@@ -10,8 +10,10 @@ number [0-9]
 IDF {letter}({letter}|{number}|\_)*
 cst_int -?{number}+
 cst_real -?{cst_int}\.{cst_int}
-cst_char \"({letter}|{number})+\"
+/* cst_char \"({letter}|{number})+\" */
+cst_char \".{1,20}\"
 cst_logical "TRUE"|"FALSE"
+string \"[^\"]+\"
 
 comment %.*
 
@@ -114,33 +116,42 @@ comment %.*
 }
 
 
-
-"GT" { 
+".AND." { 
+    printf("separator recognized : %s\n", yytext);
+    Col += yyleng;
+    return and;
+}
+".OR." { 
+    printf("separator recognized : %s\n", yytext);
+    Col += yyleng;
+    return or;
+}
+".GT." { 
     printf("separator recognized : %s\n", yytext);
     Col += yyleng;
     return gt;
 }
-"GE" { 
+".GE." { 
     printf("separator recognized : %s\n", yytext);
     Col += yyleng;
     return ge;
 }
-"EQ" { 
+".EQ." { 
     printf("separator recognized : %s\n", yytext);
     Col += yyleng;
     return eq;
 }
-"NE" { 
+".NE." { 
     printf("separator recognized : %s\n", yytext);
     Col += yyleng;
     return ne;
 }
-"LE" { 
+".LE." { 
     printf("separator recognized : %s\n", yytext);
     Col += yyleng;
     return le;
 }
-"LT" { 
+".LT." { 
     printf("separator recognized : %s\n", yytext);
     Col += yyleng;
     return lt;
@@ -151,6 +162,7 @@ comment %.*
     Col += yyleng;
     return cst_logical;
 }
+
 {IDF} {
     if (strlen(yytext) > 10){
         fprintf(stderr,"Warning line %d : IDF longer than 10 chars\n",nb_line);
@@ -179,13 +191,14 @@ comment %.*
     }
 }
 {cst_char} {
-    if (strlen(yytext) <= 20) {
         printf("Character constant recognized : %s\n", yytext);
         Col += yyleng;
         return cst_char;
-    } else {
-        fprintf(stderr,"Warning line %d : String out of range \n",nb_line);
-    }
+}
+{string} {
+        printf("String recognized : %s\n", yytext);
+        Col += yyleng;
+        return string;
 }
 
 
@@ -235,26 +248,10 @@ comment %.*
     Col += yyleng;
     return rpar;
 }
-"." { 
-    printf("separator recognized : %s\n", yytext);
-    Col += yyleng;
-    return dot;
-}
-"\"" { 
-    printf("separator recognized : %s\n", yytext);
-    Col += yyleng;
-    return quote;
-}
-":" { 
-    printf("separator recognized : %s\n", yytext);
-    Col += yyleng;
-    return colon;
-}
 
 
 {comment} { 
     printf("Comment recognized \n");
-    nb_line++;
 }
 
 [\t ] { 
