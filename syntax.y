@@ -40,19 +40,32 @@ ROUTINE : TYPE routine_kw idf lpar LIST_IDF rpar PRGM endr_kw
 LIST_DEC : LIST_DEC DEC |
 ;
 
-DEC : DEC_SIMPLE | DEC_TAB
+DEC : DEC_SIMPLE | DEC_TAB | DEC_AFFECTATION | DEC_CHAR
 ;
 
 DEC_SIMPLE : TYPE LIST_IDF semi_colon
 ;
 
+DEC_CHAR : character_kw idf mult cst_int semi_colon 
+| character_kw LIST_IDF semi_colon
+;
+
 DEC_TAB : TYPE idf dimension_kw lpar DIMENSION rpar semi_colon
 ;
 
-DIMENSION : cst_int | cst_int comma DIMENSION
+DEC_AFFECTATION : TYPE LIST_AFFECTATION semi_colon
 ;
 
-TYPE : real_kw | integer_kw | logical_kw | character_kw 
+LIST_AFFECTATION : AFFECTATION | LIST_AFFECTATION comma AFFECTATION
+;
+
+AFFECTATION : idf assign EXPR
+;
+
+DIMENSION : cst_int | DIMENSION comma cst_int 
+;
+
+TYPE : real_kw | integer_kw | logical_kw 
 ;
 
 LIST_IDF : idf |  LIST_IDF comma idf
@@ -64,13 +77,19 @@ LIST_INST : LIST_INST INST |
 INST : ASSIGN | READ | WRITE | EQUIVALENCE | CALL | IF | DOWHILE 
 ;
 
-ASSIGN : idf assign EXPR semi_colon
+ASSIGN : AFFECTATION semi_colon
 ;
 
-EQUIVALENCE : equivalence_kw lpar LIST_IDF rpar comma lpar LIST_IDF rpar semi_colon
+EQUIVALENCE : equivalence_kw lpar LIST_EQUIV rpar comma lpar LIST_EQUIV rpar semi_colon
 ;
 
-READ : read_kw lpar idf rpar semi_colon
+LIST_EQUIV : EQUIV | LIST_EQUIV comma EQUIV
+;
+
+EQUIV : idf | APPEL_TAB
+;
+
+READ : read_kw lpar LIST_IDF rpar semi_colon
 ;
 
 WRITE : write_kw lpar LIST_OUTPUT rpar semi_colon
@@ -107,19 +126,23 @@ LOGICAL : true_kw | false_kw
 IF : if_kw lpar LIST_COND rpar then_kw LIST_INST else_kw LIST_INST endif_kw
 ;
 
-LIST_COND : LIST_COND OPERATOR lpar COND rpar | lpar COND rpar
+LIST_COND : COND | LIST_COND OPERATOR COND
 ;
 
-COND : EXPR COMPARATOR EXPR | LOGICAL 
-;
-
-COMPARATOR : gt | ge | eq | ne | le | lt
+COND : EXPR ge EXPR
+| EXPR gt EXPR
+| EXPR eq EXPR
+| EXPR ne EXPR
+| EXPR le EXPR
+| EXPR lt EXPR
+| lpar COND rpar
+| LOGICAL 
 ;
 
 OPERATOR : and | or
 ;
 
-DOWHILE : dowhile_kw lpar LIST_COND rpar LIST_INST enddo_kw
+DOWHILE : dowhile_kw lpar LIST_COND rpar LIST_INST enddo_kw semi_colon
 ;
 
 %%

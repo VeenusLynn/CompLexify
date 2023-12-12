@@ -10,7 +10,6 @@ number [0-9]
 IDF {letter}({letter}|{number}|\_)*
 cst_int -?{number}+
 cst_real -?{cst_int}\.{cst_int}
-/* cst_char \"({letter}|{number})+\" */
 cst_char \".{1,20}\"
 cst_logical "TRUE"|"FALSE"
 string \"[^\"]+\"
