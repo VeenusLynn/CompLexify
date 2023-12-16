@@ -156,7 +156,9 @@ int yyerror(char *msg)
 
 main ()
 {
+    initST();
     yyparse();
+    displayST();
 }
 yywrap()
 {}
