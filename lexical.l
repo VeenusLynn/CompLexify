@@ -1,6 +1,8 @@
 %{
 #include "syntax.tab.h"
-#include "st.h"
+#include "ts.h"
+
+extern currentFileName[100];
 
 extern nb_line;
 extern Col;
@@ -195,7 +197,7 @@ comment %.*
     if (strlen(yytext) > 10){
         fprintf(stderr,"Warning line %d : IDF longer than 10 chars\n",nb_line);
         printf("Lexical error encountered. Stopping further processing.\n");
-        yyterminate();
+        exit(EXIT_FAILURE);
     } else {
         printf("IDF recognized : %s\n", yytext);
         search(yytext, "IDF"," ", 0, 0);
@@ -212,7 +214,7 @@ comment %.*
     } else {
         fprintf(stderr,"Warning line %d : Integer out of range \n",nb_line);
         printf("Lexical error encountered. Stopping further processing.\n");
-        yyterminate();
+        exit(EXIT_FAILURE);
     }
 }
 {cst_real} {
@@ -224,7 +226,7 @@ comment %.*
     } else {
         fprintf(stderr,"Warning line %d : Real out of range \n",nb_line);
         printf("Lexical error encountered. Stopping further processing.\n");
-        yyterminate();
+        exit(EXIT_FAILURE);
     }
 }
 {cst_char} {
@@ -310,11 +312,11 @@ comment %.*
 }
 
 . { 
-    printf ("\nLexical Error at Line: %d ; Column: %d ; Entity  %s  not recognized \n",nb_line, Col, yytext);
+    printf ("\n\nFile : %s. Lexical Error at Line: %d ; Column: %d ; Entity  %s  not recognized \n",currentFileName, nb_line, Col, yytext);
     Col += yyleng;  
     // Terminate the lexer
     printf("Lexical error encountered. Stopping further processing.\n");
-    yyterminate();  
+    exit(EXIT_FAILURE);  
 }
 
 %%

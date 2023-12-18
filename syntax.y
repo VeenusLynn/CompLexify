@@ -1,13 +1,12 @@
 %{
+#include <stdio.h>
+#include <string.h>
+
+char currentFileName[100];
+
 int nb_line = 1;
 int Col = 1; 
 %}
-
-%union {
-    int integer;
-    char* string;
-    float real;
-}
 
 %token idf cst_int cst_real cst_char cst_logical program_kw real_kw integer_kw logical_kw character_kw end_kw if_kw then_kw else_kw endif_kw write_kw read_kw dowhile_kw enddo_kw routine_kw endr_kw call_kw equivalence_kw dimension_kw true_kw false_kw and or gt ge eq ne le lt comma semi_colon assign plus minus mult divi lpar rpar string 
 
@@ -149,16 +148,36 @@ DOWHILE : dowhile_kw lpar LIST_COND rpar LIST_INST enddo_kw semi_colon
 
 
 int yyerror(char *msg)
-{
-    printf("Syntax Error at Line: %d , Column: %d ; \n",nb_line, Col);
+{   
+    fprintf(stderr,"\n\nFile: %s. Syntax Error at Line: %d , Column: %d ; \n",currentFileName, nb_line, Col);
     return 1;
 }
 
-main ()
+int main(int argc, char *argv[]) 
 {
+    if (argc < 2) {
+        fprintf(stderr, "Usage: %s <input_file>\n", argv[0]);
+        return 1;
+    }
+
+    // Store the file name from command-line arguments
+    strncpy(currentFileName, argv[1], sizeof(currentFileName) - 1);
+    currentFileName[sizeof(currentFileName) - 1] = '\0';
+
+    // Open the file for parsing
+    FILE *inputFile = fopen(argv[1], "r");
+    if (inputFile == NULL) {
+        fprintf(stderr, "Error opening file.\n");
+        return 1;
+    }
+
+    yyrestart(inputFile);
+
     initST();
     yyparse();
     displayST();
+
+    fclose(inputFile);
 }
 yywrap()
 {}
