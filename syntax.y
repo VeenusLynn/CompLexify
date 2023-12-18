@@ -177,7 +177,9 @@ int main(int argc, char *argv[])
     yyparse();
     displayST();
 
+    // just for maintenance
     fclose(inputFile);
+    freeST();
 }
 yywrap()
 {}

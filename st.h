@@ -20,9 +20,9 @@ typedef struct nodeKS
     struct nodeKS *next;
 } nodeKS;
 
-nodeIC *symbolTableIDF = NULL;
-nodeKS *symbolTableSeparator = NULL;
-nodeKS *symbolTableKeyword = NULL;
+nodeIC *symbolTableIDF;
+nodeKS *symbolTableSeparator;
+nodeKS *symbolTableKeyword;
 
 // initialisation of the symbol tables
 void initST()
@@ -90,7 +90,6 @@ void insert(char entity[], char code[], char type[], float val, int y)
 }
 
 // search for an element in the symbol tables and insert it if it doesn't exist
-
 void searchIC(nodeIC **head, char entity[], char code[], char type[], float val)
 {
     nodeIC *current = *head;
@@ -142,7 +141,6 @@ void search(char entity[], char code[], char type[], float val, int y)
     }
 }
 
-// display of the symbol tables
 void displayIC(nodeIC *head)
 {
     nodeIC *current = head;
@@ -178,4 +176,42 @@ void displayST()
     displayKS(symbolTableSeparator);
     printf("\n\n\n\t\t\t\t\tSymbol Table Keyword :\t\t\t\t\t\n\n\n");
     displayKS(symbolTableKeyword);
+}
+
+// free all the memory allocated for the symbol tables
+void freeIC(nodeIC **head)
+{
+    nodeIC *current = *head;
+    nodeIC *next;
+
+    while (current != NULL)
+    {
+        next = current->next;
+        free(current);
+        current = next;
+    }
+
+    *head = NULL;
+}
+
+void freeKS(nodeKS **head)
+{
+    nodeKS *current = *head;
+    nodeKS *next;
+
+    while (current != NULL)
+    {
+        next = current->next;
+        free(current);
+        current = next;
+    }
+
+    *head = NULL;
+}
+
+void freeST()
+{
+    freeIC(&symbolTableIDF);
+    freeKS(&symbolTableSeparator);
+    freeKS(&symbolTableKeyword);
 }
